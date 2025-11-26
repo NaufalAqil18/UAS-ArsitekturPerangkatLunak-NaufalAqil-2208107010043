@@ -1,0 +1,305 @@
+@startuml
+'==================== DESIGN PATTERNS ====================
+
+'Observer Pattern
+interface Observer {
+    + update(message: String): void
+}
+
+interface Subject {
+    + attach(observer: Observer): void
+    + detach(observer: Observer): void
+    + notifyObservers(message: String): void
+}
+
+'Strategy Pattern
+interface NotificationStrategy {
+    + sendNotification(recipient: String, message: String): void
+}
+
+class EmailNotification {
+    + sendNotification(recipient: String, message: String): void
+}
+
+class SMSNotification {
+    + sendNotification(recipient: String, message: String): void
+}
+
+class WhatsAppNotification {
+    + sendNotification(recipient: String, message: String): void
+}
+
+class NotificationContext {
+    - strategy: NotificationStrategy
+    + setStrategy(strategy: NotificationStrategy): void
+    + sendNotification(recipient: String, message: String): void
+}
+
+'Factory Method Pattern
+abstract class UserFactory {
+    + {abstract} createPatient(name: String, email: String, phone: String, address: String): Patient
+    + {abstract} createDoctor(name: String, specialization: String): Doctor
+}
+
+class ConcreteUserFactory {
+    - db: Database
+    + createPatient(name: String, email: String, phone: String, address: String): Patient
+    + createDoctor(name: String, specialization: String): Doctor
+}
+
+'==================== MODEL CLASSES ====================
+
+class Patient {
+    - id: String
+    - name: String
+    - email: String
+    - phone: String
+    - address: String
+    - notificationContext: NotificationContext
+    + Patient(id: String, name: String, email: String, phone: String, address: String)
+    + getId(): String
+    + getName(): String
+    + getEmail(): String
+    + getPhone(): String
+    + getAddress(): String
+    + setNotificationStrategy(strategy: NotificationStrategy): void
+    + update(message: String): void
+    + toFileString(): String
+    + {static} fromFileString(line: String): Patient
+}
+
+class Doctor {
+    - id: String
+    - name: String
+    - specialization: String
+    - schedules: List<Schedule>
+    - notificationContext: NotificationContext
+    + Doctor(id: String, name: String, specialization: String)
+    + getId(): String
+    + getName(): String
+    + getSpecialization(): String
+    + getSchedules(): List<Schedule>
+    + setNotificationStrategy(strategy: NotificationStrategy): void
+    + update(message: String): void
+    + addSchedule(schedule: Schedule): void
+    + removeSchedule(schedule: Schedule): void
+    + toFileString(): String
+    + {static} fromFileString(line: String): Doctor
+}
+
+class Schedule {
+    - id: String
+    - doctorId: String
+    - date: LocalDate
+    - startTime: LocalTime
+    - endTime: LocalTime
+    - isAvailable: boolean
+    + Schedule(id: String, doctorId: String, date: LocalDate, startTime: LocalTime, endTime: LocalTime)
+    + getId(): String
+    + getDoctorId(): String
+    + getDate(): LocalDate
+    + getStartTime(): LocalTime
+    + getEndTime(): LocalTime
+    + isAvailable(): boolean
+    + setAvailable(available: boolean): void
+    + toFileString(): String
+    + {static} fromFileString(line: String): Schedule
+}
+
+class Appointment {
+    - id: String
+    - patientId: String
+    - scheduleId: String
+    - bookingDate: LocalDate
+    - status: String
+    - observers: List<Observer>
+    + Appointment(id: String, patientId: String, scheduleId: String)
+    + getId(): String
+    + getPatientId(): String
+    + getScheduleId(): String
+    + getBookingDate(): LocalDate
+    + getStatus(): String
+    + setStatus(status: String): void
+    + attach(observer: Observer): void
+    + detach(observer: Observer): void
+    + notifyObservers(message: String): void
+    + toFileString(): String
+    + {static} fromFileString(line: String): Appointment
+}
+
+class ConsultationHistory {
+    - id: String
+    - appointmentId: String
+    - consultationDate: LocalDate
+    - diagnosis: String
+    - notes: String
+    + ConsultationHistory(id: String, appointmentId: String, diagnosis: String, notes: String)
+    + getId(): String
+    + getAppointmentId(): String
+    + getConsultationDate(): LocalDate
+    + getDiagnosis(): String
+    + getNotes(): String
+    + toFileString(): String
+    + {static} fromFileString(line: String): ConsultationHistory
+}
+
+'Singleton Pattern
+class Database {
+    - {static} instance: Database
+    - patients: Map<String, Patient>
+    - doctors: Map<String, Doctor>
+    - schedules: Map<String, Schedule>
+    - appointments: Map<String, Appointment>
+    - consultationHistories: Map<String, ConsultationHistory>
+    - patientCounter: int
+    - doctorCounter: int
+    - scheduleCounter: int
+    - appointmentCounter: int
+    - historyCounter: int
+    - {static} PATIENTS_FILE: String
+    - {static} DOCTORS_FILE: String
+    - {static} SCHEDULES_FILE: String
+    - {static} APPOINTMENTS_FILE: String
+    - {static} HISTORIES_FILE: String
+    - {static} COUNTERS_FILE: String
+    - Database()
+    + {static} getInstance(): Database
+    - loadAllData(): void
+    - loadCounters(): void
+    - saveCounters(): void
+    - loadPatients(): void
+    - savePatients(): void
+    - loadDoctors(): void
+    - saveDoctors(): void
+    - loadSchedules(): void
+    - saveSchedules(): void
+    - loadAppointments(): void
+    - saveAppointments(): void
+    - loadConsultationHistories(): void
+    - saveConsultationHistories(): void
+    - initializeSampleData(): void
+    + generatePatientId(): String
+    + generateDoctorId(): String
+    + generateScheduleId(): String
+    + generateAppointmentId(): String
+    + generateHistoryId(): String
+    + addPatient(patient: Patient): void
+    + addDoctor(doctor: Doctor): void
+    + addSchedule(schedule: Schedule): void
+    + updateSchedule(schedule: Schedule): void
+    + removeSchedule(scheduleId: String): void
+    + addAppointment(appointment: Appointment): void
+    + addConsultationHistory(history: ConsultationHistory): void
+    + getPatient(id: String): Patient
+    + getDoctor(id: String): Doctor
+    + getSchedule(id: String): Schedule
+    + getAppointment(id: String): Appointment
+    + getAllPatients(): Collection<Patient>
+    + getAllDoctors(): Collection<Doctor>
+    + getAllSchedules(): Collection<Schedule>
+    + getAllAppointments(): Collection<Appointment>
+    + getAllConsultationHistories(): Collection<ConsultationHistory>
+    + getPatientAppointments(patientId: String): List<Appointment>
+    + getPatientConsultationHistory(patientId: String): List<ConsultationHistory>
+}
+
+class DoctorSchedulingApp {
+    - {static} db: Database
+    - {static} userFactory: UserFactory
+    - {static} scanner: Scanner
+    - {static} currentPatient: Patient
+    - {static} currentDoctor: Doctor
+    + {static} main(args: String[]): void
+    - {static} showMainMenu(): void
+    - {static} patientMenu(): void
+    - {static} registerPatient(): void
+    - {static} loginPatient(): void
+    - {static} chooseNotificationStrategy(patient: Patient): void
+    - {static} patientLoggedInMenu(): void
+    - {static} viewDoctorList(): void
+    - {static} bookAppointment(): void
+    - {static} viewConsultationHistory(): void
+    - {static} doctorMenu(): void
+    - {static} chooseNotificationStrategyDoctor(doctor: Doctor): void
+    - {static} doctorLoggedInMenu(): void
+    - {static} viewDoctorSchedule(): void
+    - {static} addDoctorSchedule(): void
+    - {static} removeDoctorSchedule(): void
+    - {static} viewDoctorAppointments(): void
+    - {static} completeConsultation(): void
+    - {static} getIntInput(prompt: String): int
+}
+
+'==================== RELATIONSHIPS ====================
+
+'Strategy Pattern Relationships
+NotificationStrategy <|.. EmailNotification
+NotificationStrategy <|.. SMSNotification
+NotificationStrategy <|.. WhatsAppNotification
+NotificationContext o-- NotificationStrategy
+
+'Observer Pattern Relationships
+Observer <|.. Patient
+Observer <|.. Doctor
+Subject <|.. Appointment
+Appointment o-- Observer
+
+'Factory Pattern Relationships
+UserFactory <|-- ConcreteUserFactory
+ConcreteUserFactory ..> Patient : creates
+ConcreteUserFactory ..> Doctor : creates
+ConcreteUserFactory --> Database : uses
+
+'Model Relationships
+Patient *-- NotificationContext
+Doctor *-- NotificationContext
+Doctor "1" o-- "0..*" Schedule
+Schedule --> Doctor : references
+Appointment --> Patient : references
+Appointment --> Schedule : references
+ConsultationHistory --> Appointment : references
+
+'Database Relationships (Singleton)
+Database "1" o-- "0..*" Patient
+Database "1" o-- "0..*" Doctor
+Database "1" o-- "0..*" Schedule
+Database "1" o-- "0..*" Appointment
+Database "1" o-- "0..*" ConsultationHistory
+
+'Main Application Relationships
+DoctorSchedulingApp --> Database : uses (Singleton)
+DoctorSchedulingApp --> UserFactory : uses
+DoctorSchedulingApp --> Patient : manages
+DoctorSchedulingApp --> Doctor : manages
+
+'Notes
+note right of Database
+  **Singleton Pattern**
+  - Private constructor
+  - Static getInstance() method
+  - Manages all data persistence
+  - Uses .txt files as database
+end note
+
+note right of UserFactory
+  **Factory Method Pattern**
+  - Abstract factory for creating users
+  - Encapsulates ID generation
+  - Automatic database persistence
+end note
+
+note right of NotificationStrategy
+  **Strategy Pattern**
+  - Different notification methods
+  - Runtime strategy selection
+  - Used by Patient and Doctor
+end note
+
+note right of Appointment
+  **Observer Pattern**
+  - Subject that notifies observers
+  - Patients and Doctors are observers
+  - Notifies on status changes
+end note
+
+@enduml
