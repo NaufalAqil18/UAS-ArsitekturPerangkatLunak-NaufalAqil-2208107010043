@@ -304,9 +304,9 @@ Proyek ini dibuat untuk keperluan Ujian Tengah Semester (UTS) Praktikum Arsitekt
 
 ## 📞 Support
 
-Nama : Naufal Aqil
-NPM : 2208107010043
-Aplikasi : Aplikasi Penjadwalan Dokter
+- Nama : Naufal Aqil
+- NPM : 2208107010043
+- Aplikasi : Aplikasi Penjadwalan Dokter
 
 Jika ada pertanyaan atau masalah:
 
