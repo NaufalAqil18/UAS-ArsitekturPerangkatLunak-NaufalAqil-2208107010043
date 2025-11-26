@@ -295,12 +295,13 @@ class Database {
     private Map<String, Appointment> appointments;
     private Map<String, ConsultationHistory> consultationHistories;
     
-    private static final String PATIENTS_FILE = "patients.txt";
-    private static final String DOCTORS_FILE = "doctors.txt";
-    private static final String SCHEDULES_FILE = "schedules.txt";
-    private static final String APPOINTMENTS_FILE = "appointments.txt";
-    private static final String HISTORIES_FILE = "histories.txt";
-    private static final String COUNTERS_FILE = "counters.txt";
+    private static final String DATA_DIR = "data";
+    private static final String PATIENTS_FILE = DATA_DIR + "/patients.txt";
+    private static final String DOCTORS_FILE = DATA_DIR + "/doctors.txt";
+    private static final String SCHEDULES_FILE = DATA_DIR + "/schedules.txt";
+    private static final String APPOINTMENTS_FILE = DATA_DIR + "/appointments.txt";
+    private static final String HISTORIES_FILE = DATA_DIR + "/histories.txt";
+    private static final String COUNTERS_FILE = DATA_DIR + "/counters.txt";
     
     private int patientCounter = 1;
     private int doctorCounter = 1;
@@ -314,6 +315,14 @@ class Database {
         schedules = new HashMap<>();
         appointments = new HashMap<>();
         consultationHistories = new HashMap<>();
+        
+        // Create data directory if not exists
+        File dataDir = new File(DATA_DIR);
+        if (!dataDir.exists()) {
+            dataDir.mkdirs();
+            System.out.println("[INFO] Folder 'data' berhasil dibuat untuk menyimpan database.");
+        }
+        
         loadAllData();
     }
     
@@ -683,6 +692,9 @@ public class DoctorSchedulingApp {
                     doctorMenu();
                     break;
                 case 3:
+                    viewAllDoctorsAndPatients();
+                    break;
+                case 4:
                     System.out.println("\n✓ Data telah disimpan ke file .txt");
                     System.out.println("Terima kasih telah menggunakan sistem kami!");
                     return;
@@ -698,8 +710,99 @@ public class DoctorSchedulingApp {
         System.out.println("=".repeat(50));
         System.out.println("1. Menu Pasien");
         System.out.println("2. Menu Dokter");
-        System.out.println("3. Keluar");
+        System.out.println("3. Lihat Daftar Dokter & Pasien");
+        System.out.println("4. Keluar");
         System.out.println("=".repeat(50));
+    }
+    
+    private static void viewAllDoctorsAndPatients() {
+        while (true) {
+            System.out.println("\n" + "=".repeat(50));
+            System.out.println("DAFTAR DOKTER & PASIEN");
+            System.out.println("=".repeat(50));
+            System.out.println("1. Lihat Semua Dokter");
+            System.out.println("2. Lihat Semua Pasien");
+            System.out.println("3. Kembali ke Menu Utama");
+            System.out.println("=".repeat(50));
+            
+            int choice = getIntInput("Pilih menu: ");
+            
+            switch (choice) {
+                case 1:
+                    viewAllDoctors();
+                    break;
+                case 2:
+                    viewAllPatients();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Pilihan tidak valid!");
+            }
+        }
+    }
+    
+    private static void viewAllDoctors() {
+        System.out.println("\n>>> DAFTAR SEMUA DOKTER <<<");
+        System.out.println("=".repeat(80));
+        
+        Collection<Doctor> doctors = db.getAllDoctors();
+        
+        if (doctors.isEmpty()) {
+            System.out.println("Belum ada dokter terdaftar.");
+        } else {
+            int no = 1;
+            for (Doctor doctor : doctors) {
+                System.out.println(no + ". ID: " + doctor.getId());
+                System.out.println("   Nama: " + doctor.getName());
+                System.out.println("   Spesialisasi: " + doctor.getSpecialization());
+                System.out.println("   Jumlah Jadwal: " + doctor.getSchedules().size());
+                
+                // Hitung jadwal tersedia
+                long availableSchedules = doctor.getSchedules().stream()
+                    .filter(Schedule::isAvailable)
+                    .count();
+                System.out.println("   Jadwal Tersedia: " + availableSchedules);
+                
+                System.out.println("   " + "-".repeat(76));
+                no++;
+            }
+            System.out.println("\nTotal Dokter: " + doctors.size());
+        }
+        System.out.println("=".repeat(80));
+    }
+    
+    private static void viewAllPatients() {
+        System.out.println("\n>>> DAFTAR SEMUA PASIEN <<<");
+        System.out.println("=".repeat(80));
+        
+        Collection<Patient> patients = db.getAllPatients();
+        
+        if (patients.isEmpty()) {
+            System.out.println("Belum ada pasien terdaftar.");
+        } else {
+            int no = 1;
+            for (Patient patient : patients) {
+                System.out.println(no + ". ID: " + patient.getId());
+                System.out.println("   Nama: " + patient.getName());
+                System.out.println("   Email: " + patient.getEmail());
+                System.out.println("   Telepon: " + patient.getPhone());
+                System.out.println("   Alamat: " + patient.getAddress());
+                
+                // Hitung jumlah appointment
+                List<Appointment> appointments = db.getPatientAppointments(patient.getId());
+                System.out.println("   Jumlah Appointment: " + appointments.size());
+                
+                // Hitung jumlah riwayat konsultasi
+                List<ConsultationHistory> histories = db.getPatientConsultationHistory(patient.getId());
+                System.out.println("   Riwayat Konsultasi: " + histories.size());
+                
+                System.out.println("   " + "-".repeat(76));
+                no++;
+            }
+            System.out.println("\nTotal Pasien: " + patients.size());
+        }
+        System.out.println("=".repeat(80));
     }
     
     private static void patientMenu() {

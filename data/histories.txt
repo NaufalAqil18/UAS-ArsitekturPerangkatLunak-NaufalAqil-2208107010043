@@ -1,0 +1,2 @@
+H001|A003|2025-11-26|sehat|banyak minum
+H002|A003|2025-11-26|flu|tidur
