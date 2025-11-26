@@ -9,6 +9,7 @@ Sistem ini dirancang untuk mempermudah pasien dalam melakukan registrasi, pemesa
 ## 🎯 Fitur Utama
 
 ### Menu Pasien
+
 - ✅ Registrasi akun baru dengan data pribadi
 - ✅ Login menggunakan ID pasien
 - ✅ Lihat daftar dokter beserta spesialisasi dan jadwal
@@ -18,6 +19,7 @@ Sistem ini dirancang untuk mempermudah pasien dalam melakukan registrasi, pemesa
 - ✅ Pilih metode notifikasi (Email/SMS/WhatsApp)
 
 ### Menu Dokter
+
 - ✅ Login menggunakan ID dokter
 - ✅ Lihat jadwal praktek
 - ✅ Tambah jadwal baru
@@ -27,6 +29,7 @@ Sistem ini dirancang untuk mempermudah pasien dalam melakukan registrasi, pemesa
 - ✅ Pilih metode notifikasi (SMS/Email/WhatsApp)
 
 ### Menu Informasi
+
 - ✅ Lihat daftar semua dokter (dengan statistik)
 - ✅ Lihat daftar semua pasien (dengan statistik)
 
@@ -35,22 +38,26 @@ Sistem ini dirancang untuk mempermudah pasien dalam melakukan registrasi, pemesa
 Aplikasi ini mengimplementasikan 4 design patterns:
 
 ### 1. **Singleton Pattern**
+
 - **Class**: `Database`
 - **Fungsi**: Memastikan hanya ada satu instance database di seluruh aplikasi
 - **Keuntungan**: Konsistensi data dan efisiensi memori
 
 ### 2. **Factory Method Pattern**
+
 - **Class**: `UserFactory`, `ConcreteUserFactory`
 - **Fungsi**: Membuat objek Patient dan Doctor dengan enkapsulasi pembuatan ID
 - **Keuntungan**: Pemisahan logic pembuatan objek dan automatic persistence
 
 ### 3. **Strategy Pattern**
+
 - **Interface**: `NotificationStrategy`
 - **Implementasi**: `EmailNotification`, `SMSNotification`, `WhatsAppNotification`
 - **Fungsi**: Memungkinkan pemilihan metode notifikasi secara dinamis
 - **Keuntungan**: Fleksibilitas dalam mengubah behavior notifikasi
 
 ### 4. **Observer Pattern**
+
 - **Interface**: `Subject`, `Observer`
 - **Implementasi**: `Appointment` (Subject), `Patient` dan `Doctor` (Observer)
 - **Fungsi**: Notifikasi otomatis saat terjadi perubahan status appointment
@@ -93,24 +100,26 @@ doctor-scheduling-app/
 
 Aplikasi menggunakan 6 file .txt sebagai persistent storage:
 
-| File | Deskripsi |
-|------|-----------|
-| `patients.txt` | Data pasien (ID, nama, email, telepon, alamat) |
-| `doctors.txt` | Data dokter (ID, nama, spesialisasi) |
-| `schedules.txt` | Jadwal dokter (ID, doctorID, tanggal, waktu, status) |
-| `appointments.txt` | Booking appointment (ID, patientID, scheduleID, tanggal, status) |
-| `histories.txt` | Riwayat konsultasi (ID, appointmentID, tanggal, diagnosis, catatan) |
-| `counters.txt` | Counter untuk auto-increment ID |
+| File               | Deskripsi                                                           |
+| ------------------ | ------------------------------------------------------------------- |
+| `patients.txt`     | Data pasien (ID, nama, email, telepon, alamat)                      |
+| `doctors.txt`      | Data dokter (ID, nama, spesialisasi)                                |
+| `schedules.txt`    | Jadwal dokter (ID, doctorID, tanggal, waktu, status)                |
+| `appointments.txt` | Booking appointment (ID, patientID, scheduleID, tanggal, status)    |
+| `histories.txt`    | Riwayat konsultasi (ID, appointmentID, tanggal, diagnosis, catatan) |
+| `counters.txt`     | Counter untuk auto-increment ID                                     |
 
 ## 🚀 Cara Instalasi & Menjalankan
 
 ### Prerequisites
+
 - Java Development Kit (JDK) 8 atau lebih tinggi
 - Terminal/Command Prompt
 
 ### Langkah-langkah:
 
 1. **Clone atau Download Source Code**
+
    ```bash
    # Buat struktur folder
    mkdir doctor-scheduling-app
@@ -119,9 +128,11 @@ Aplikasi menggunakan 6 file .txt sebagai persistent storage:
    ```
 
 2. **Simpan Source Code**
+
    - Simpan file `DoctorSchedulingApp.java` di folder `src/`
 
 3. **Compile Program**
+
    ```bash
    # Compile dengan output ke folder bin
    javac -d bin src/DoctorSchedulingApp.java
@@ -134,6 +145,7 @@ Aplikasi menggunakan 6 file .txt sebagai persistent storage:
    ```
 
 ### Alternatif One-liner:
+
 ```bash
 # Compile dan jalankan sekaligus
 javac -d bin src/DoctorSchedulingApp.java && java -cp bin DoctorSchedulingApp
@@ -142,6 +154,7 @@ javac -d bin src/DoctorSchedulingApp.java && java -cp bin DoctorSchedulingApp
 ## 📝 Cara Penggunaan
 
 ### 1. Registrasi Pasien
+
 ```
 Menu Utama → 1 (Menu Pasien) → 1 (Registrasi Akun Baru)
 - Masukkan data: Nama, Email, Telepon, Alamat
@@ -149,6 +162,7 @@ Menu Utama → 1 (Menu Pasien) → 1 (Registrasi Akun Baru)
 ```
 
 ### 2. Login Pasien
+
 ```
 Menu Utama → 1 (Menu Pasien) → 2 (Login Pasien)
 - Masukkan ID Pasien
@@ -156,6 +170,7 @@ Menu Utama → 1 (Menu Pasien) → 2 (Login Pasien)
 ```
 
 ### 3. Booking Jadwal
+
 ```
 Menu Pasien → 2 (Booking Jadwal Konsultasi)
 - Lihat daftar dokter dan jadwal tersedia
@@ -164,6 +179,7 @@ Menu Pasien → 2 (Booking Jadwal Konsultasi)
 ```
 
 ### 4. Login Dokter
+
 ```
 Menu Utama → 2 (Menu Dokter)
 - Masukkan ID Dokter (Default: D001, D002, D003)
@@ -171,6 +187,7 @@ Menu Utama → 2 (Menu Dokter)
 ```
 
 ### 5. Tambah Jadwal (Dokter)
+
 ```
 Menu Dokter → 2 (Tambah Jadwal Baru)
 - Format tanggal: dd-MM-yyyy (contoh: 25-12-2025)
@@ -180,13 +197,15 @@ Menu Dokter → 2 (Tambah Jadwal Baru)
 ## 🔐 Data Login Default
 
 ### Dokter (Sudah Tersedia)
-| ID | Nama | Spesialisasi |
-|----|------|-------------|
-| D001 | Dr. Ahmad Yani | Kardiologi |
-| D002 | Dr. Siti Rahma | Pediatri |
-| D003 | Dr. Budi Santoso | Orthopedi |
+
+| ID   | Nama             | Spesialisasi |
+| ---- | ---------------- | ------------ |
+| D001 | Dr. Ahmad Yani   | Kardiologi   |
+| D002 | Dr. Siti Rahma   | Pediatri     |
+| D003 | Dr. Budi Santoso | Orthopedi    |
 
 ### Pasien
+
 - Pasien perlu registrasi terlebih dahulu
 - Setelah registrasi, gunakan ID yang diberikan sistem
 
@@ -206,6 +225,7 @@ Aplikasi ini mengimplementasikan semua requirements:
 ## 🎨 Contoh Output
 
 ### Menu Utama
+
 ```
 ╔════════════════════════════════════════════════╗
 ║   SISTEM PENJADWALAN DOKTER KLINIK SEHAT      ║
@@ -224,6 +244,7 @@ MENU UTAMA
 ```
 
 ### Notifikasi Observer Pattern
+
 ```
 [EMAIL] Mengirim ke patient@email.com: Booking berhasil! Appointment ID: A001 dengan Dr. Ahmad Yani pada 27-11-2025
 [SMS] Mengirim ke Dr. Ahmad Yani: Booking berhasil! Appointment ID: A001 dengan Dr. Ahmad Yani pada 27-11-2025
@@ -232,18 +253,22 @@ MENU UTAMA
 ## 🛠️ Troubleshooting
 
 ### Error: "javac tidak dikenali"
+
 - Pastikan JDK sudah terinstall
 - Set PATH environment variable ke JDK bin folder
 
 ### Error: "NoClassDefFoundError"
+
 - Pastikan menjalankan dari root directory
 - Gunakan `-cp bin` saat menjalankan program
 
 ### Data hilang setelah restart
+
 - Pastikan folder `data/` berada di directory yang sama dengan tempat Anda menjalankan program
 - Check permission folder untuk read/write
 
 ### File .txt tidak terbuat
+
 - Program otomatis membuat file saat pertama kali dijalankan
 - Folder `data/` harus sudah ada sebelum menjalankan program
 
@@ -259,6 +284,7 @@ MENU UTAMA
 ## 👨‍💻 Author
 
 **Naufal Aqil** (2208107010043)
+
 - Program Studi Informatika
 - Fakultas Matematika dan Ilmu Pengetahuan Alam
 - Universitas Syiah Kuala
@@ -278,7 +304,12 @@ Proyek ini dibuat untuk keperluan Ujian Tengah Semester (UTS) Praktikum Arsitekt
 
 ## 📞 Support
 
+Nama : Naufal Aqil
+NPM : 2208107010043
+Aplikasi : Aplikasi Penjadwalan Dokter
+
 Jika ada pertanyaan atau masalah:
+
 1. Periksa bagian Troubleshooting di atas
 2. Pastikan struktur folder sesuai dokumentasi
 3. Verify JDK version compatibility
